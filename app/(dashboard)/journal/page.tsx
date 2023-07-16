@@ -1,11 +1,11 @@
-import { prisma } from '@/utils/db'
-import { getUserFromClerkID } from '@/utils/auth'
-import EntryCard from '@/components/EntryCard'
-import NewEntryCard from '@/components/NewEntryCard'
-import Link from 'next/link'
+import { prisma } from '@/utils/db';
+import { getUserFromClerkID } from '@/utils/auth';
+import EntryCard from '@/components/EntryCard';
+import NewEntryCard from '@/components/NewEntryCard';
+import Link from 'next/link';
 
 const getEntries = async () => {
-  const user = await getUserFromClerkID()
+  const user = await getUserFromClerkID();
   const entries = await prisma.journalEntry.findMany({
     where: {
       userId: user.id,
@@ -13,16 +13,17 @@ const getEntries = async () => {
     orderBy: {
       createdAt: 'desc',
     },
-  })
+  });
 
-  return entries
-}
+  return entries;
+};
 
 const JournalPage = async () => {
-  const data = await getEntries()
+  const data = await getEntries();
   return (
-    <div className="px-6 py-8 bg-zinc-400/50 h-full">
+    <div className="px-6 py-8 bg-zinc-100/50 h-full">
       <h1 className="text-4xl mb-12">Journals</h1>
+      <div className="my-8"></div>
       <div className="grid grid-cols-3 gap-4">
         <NewEntryCard />
         {data.map((entry) => (
@@ -34,8 +35,7 @@ const JournalPage = async () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-
-export default JournalPage
+export default JournalPage;
