@@ -1,18 +1,32 @@
+import { analyze } from "@/utils/ai";
 import { getUserFromClerkID } from "@/utils/auth";
 import { prisma } from "@/utils/db";
-import { revalidatePath } from "next/cache";
-import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache"
+import { NextResponse } from "next/server"
 
 export const POST = async () => {
-    const user = await getUserFromClerkID();
-    const entry = await prisma.journalEntry.create({
-        data: {
-            userId: user.id,
-            content: 'Welcome to your journal! Write something here! :)',
-        },
-    })
+    try {
+        const user = await getUserFromClerkID()
+        const entry = await prisma.journalEntry.create({
+            data: {
+                userId: user.id,
+                content: 'Welcome to your journal! Write something here! :)',
+            },
+        })
 
-    revalidatePath('/journal')
+        const analysis = await analyze(entry.content)
+        await prisma.analysis.create({
+            data: {
+                entryId: entry.id,
+                ...analysis,
+            },
+        })
 
-    return NextResponse.json({ data: entry })
+        revalidatePath('/journal')
+
+        return NextResponse.json({ data: entry });
+    } catch (error) {
+        console.error('There has been a problem creating the journal entry: ', error)
+        throw error
+    }
 }
