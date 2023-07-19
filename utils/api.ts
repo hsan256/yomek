@@ -60,3 +60,22 @@ export const updateEntry = async (id: string, content: string): Promise<any> => 
         throw error;
     }
 }
+
+export const askQuestion = async (question) => {
+    try {
+        const res = await fetch(
+            new Request(createURL('/api/question'), {
+                method: 'POST',
+                body: JSON.stringify({ question })
+            })
+        )
+
+        if (res.ok) {
+            const data = await res.json();
+            return data.data
+        }
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation: ', error);
+        throw error;
+    }
+}
