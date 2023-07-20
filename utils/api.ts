@@ -71,8 +71,7 @@ export const askQuestion = async (question) => {
         )
 
         if (res.ok) {
-            const data = await res.json();
-            return data.data
+            return await res.json();
         }
     } catch (error) {
         console.error('There has been a problem with your fetch operation: ', error);

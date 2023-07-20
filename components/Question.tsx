@@ -3,44 +3,44 @@
 import { askQuestion } from '@/utils/api'
 import { useState } from 'react'
 
-const Question = (props) => {
-  const [value, setValue] = useState('')
+const Question = () => {
+  const [question, setQuestion] = useState('')
+  const [answer, setAnswer] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [response, setResponse] = useState()
-  const onChange = (e) => {
-    setValue(e.target.value)
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    const answer = await askQuestion(value)
-    setResponse(answer)
-    setValue('')
+
+    const { data } = await askQuestion(question)
+
+    setAnswer(data)
     setLoading(false)
+    setQuestion('')
   }
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <input
-          disabled={loading}
-          onChange={onChange}
-          value={value}
           type="text"
-          placeholder="Ask a question?"
-          className="border border-black/20 px-4 py-2 text-lg rounded-lg"
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          className="border border-gray-300 rounded-md p-2 text-lg"
+          disabled={loading}
+          placeholder="Ask a question..."
         />
         <button
           disabled={loading}
           type="submit"
-          className="bg-blue-400 px-4 py-2 rounded-lg text-lg">
+          className="bg-blue-400 px-4 py-2 rounded-md">
           Ask
         </button>
       </form>
-      {loading && <div>...Loading</div>}
-      {response && <div>...{response}</div>}
+      {loading && <p>Loading...</p>}
+      {answer && <p className="my-4 text-xl">{answer}</p>}
     </div>
   )
 }
+
 export default Question
