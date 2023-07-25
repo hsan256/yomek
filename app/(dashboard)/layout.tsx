@@ -1,26 +1,45 @@
+'use client'
+
 import { UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
 
 const links = [
-  { name: 'Home', href: '/' },
   { name: 'Journals', href: '/journal' },
   { name: 'History', href: '/history' },
 ]
 
+const linkVariants = {
+  initial: { opacity: 0, x: -20 },
+  animate: { opacity: 1, x: 0 },
+  hover: { scale: 1.1 },
+}
+
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
+  const router = useRouter()
+
   return (
     <div className="flex h-screen">
       <aside className="bg-gray-100 border-gray-200 border-r flex flex-col items-center w-48">
-        <div className="p-4">
-          <h1 className="text-3xl font-bold text-gray-800">YOMEK</h1>
+        <div className="p-4 cursor-pointer" onClick={() => router.push('/')}>
+          <h1 className="text-3xl font-bold text-gray-800 text-center">
+            YOMEK
+          </h1>
         </div>
         <div>
           <ul className="px-4">
             {links.map((link) => (
-              <li key={link.name} className="text-xl my-4">
+              <motion.li
+                key={link.name}
+                className="text-xl my-4"
+                variants={linkVariants}
+                initial="initial"
+                animate="animate"
+                whileHover="hover">
                 <Link href={link.href}>{link.name}</Link>
-              </li>
+              </motion.li>
             ))}
           </ul>
         </div>

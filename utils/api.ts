@@ -61,6 +61,18 @@ export const updateEntry = async (id: string, content: string): Promise<any> => 
     }
 }
 
+export const deleteEntry = async (id) => {
+    const res = await fetch(createURL(`/api/journal/${id}`), {
+        method: 'DELETE',
+    });
+
+    if (res.ok) {
+        return res.json()
+    } else {
+        throw new Error('Something went wrong on API server!')
+    }
+}
+
 export const askQuestion = async (question) => {
     try {
         const res = await fetch(
